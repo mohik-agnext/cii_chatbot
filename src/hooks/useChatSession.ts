@@ -12,7 +12,7 @@ export const useChatSession = () => {
 
   const sendMessage = async (userMessage: string) => {
     // Add user message to chat
-    const newMessages = [...messages, { from: 'user', text: userMessage }];
+    const newMessages: Message[] = [...messages, { from: 'user', text: userMessage }];
     setMessages(newMessages);
     setLoading(true);
 
@@ -31,7 +31,7 @@ export const useChatSession = () => {
       setMessages([
         ...newMessages,
         { 
-          from: 'ai', 
+          from: 'ai' as const, 
           text: data.text || 'Sorry, I couldn\'t process that request.'
         }
       ]);
@@ -40,7 +40,7 @@ export const useChatSession = () => {
       setMessages([
         ...newMessages,
         { 
-          from: 'ai', 
+          from: 'ai' as const, 
           text: 'Sorry, something went wrong with the connection. Please try again.' 
         }
       ]);
