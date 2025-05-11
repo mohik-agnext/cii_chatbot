@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface ChatBubbleProps {
@@ -11,6 +10,16 @@ interface ChatBubbleProps {
 const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
   const isUser = message.from === 'user';
   
+  // Function to render text with line breaks
+  const renderTextWithLineBreaks = (text: string) => {
+    return text.split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        {index < text.split('\n').length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
+  
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3 message-enter`}>
       <div 
@@ -20,7 +29,9 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
             : 'bg-gradient-to-r from-blue-50 to-purple-50 text-gray-800 border border-purple-100'
         }`}
       >
-        <p className="text-sm md:text-base leading-relaxed">{message.text}</p>
+        <p className="text-sm md:text-base leading-relaxed whitespace-pre-line">
+          {renderTextWithLineBreaks(message.text)}
+        </p>
       </div>
     </div>
   );
