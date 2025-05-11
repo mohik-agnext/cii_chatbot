@@ -1,12 +1,27 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import ChatWindow from '../components/ChatWindow';
+import InputBox from '../components/InputBox';
+import { useChatSession } from '../hooks/useChatSession';
 
 const Index = () => {
+  const { messages, sendMessage, loading } = useChatSession();
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="flex flex-col h-screen bg-white">
+      <header className="bg-white border-b px-4 py-3 shadow-sm">
+        <h1 className="text-xl font-bold bg-gradient-to-r from-violet-500 to-fuchsia-500 text-transparent bg-clip-text">Cii Chat</h1>
+      </header>
+      
+      <ChatWindow 
+        messages={messages}
+        loading={loading}
+      />
+      
+      <InputBox 
+        onSend={sendMessage}
+        disabled={loading}
+      />
     </div>
   );
 };
