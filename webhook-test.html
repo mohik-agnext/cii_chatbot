@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Webhook Test</title>
+</head>
+<body>
+    <h1>Webhook Test</h1>
+    <div>
+        <textarea id="message" rows="4" cols="50" placeholder="Enter your message"></textarea>
+        <br>
+        <button id="sendBtn">Send Message</button>
+    </div>
+    <div id="response" style="margin-top: 20px; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+
+    <script>
+        document.getElementById('sendBtn').addEventListener('click', async () => {
+            const message = document.getElementById('message').value;
+            const responseDiv = document.getElementById('response');
+            
+            responseDiv.textContent = 'Sending request...';
+            
+            try {
+                const response = await fetch('https://mohikagnext.app.n8n.cloud/webhook/qa', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                
+                const contentType = response.headers.get('content-type');
+                let result;
+                
+                if (contentType && contentType.includes('application/json')) {
+                    result = await response.json();
+                    responseDiv.textContent = 'JSON Response:\n' + JSON.stringify(result, null, 2);
+                } else {
+                    result = await response.text();
+                    responseDiv.textContent = 'Text Response:\n' + result;
+                }
+                
+                console.log('Response:', result);
+            } catch (err) {
+                responseDiv.textContent = 'Error: ' + err.message;
+                console.error('Error:', err);
+            }
+        });
+    </script>
+</body>
+</html> 

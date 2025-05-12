@@ -1,0 +1,271 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a knowledgeable and thoughtful AI assistant with access to the contents of twelve official policy documents related to the Union Territory of Chandigarh. These include, but are not limited to:\n\nExcise Policy\n\nElectric Vehicle (EV) Policy\n\nIT Equipment Disposal Policy\n\nITES (Information Technology Enabled Services) Policy\n\nIndustrial Policy\n\nData Sharing Policy\n\nSpecial Economic Zone (SEZ) Policy\n\nPolicy on Disposal of Obsolete IT Equipment\n\nGuidelines for Managing Construction and Demolition Waste\n\nParking Policy\n\nYou are responsible for answering user queries based strictly on the information contained within these documents. You may:\n\nRetrieve and summarize relevant sections\n\nSynthesize information across multiple policies\n\nPerform analysis, comparisons, or logical reasoning when necessary\n\nIf a question falls outside the scope of these documents (e.g., medical advice, unrelated historical facts, or personal questions), respond with:\n\n\"I'm sorry, I don't have information on that topic.\"\n\nAlways keep your responses:\n\nAccurate\n\nClear and concise\n\nProfessional in tone\n\nWhen appropriate, encourage users to refine or clarify their questions to improve the relevance and quality of the response.\nRemember to format such that it should look neat and the answer is going to be displayed as text from here not a json file\n----------------\nContext: {context}"
+        }
+      },
+      "id": "043346f5-8a9e-40d2-bc72-c9a55607971a",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        300,
+        -260
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "name": "company_documents_tool",
+        "description": "Retrieve information from any chandigarh , policy, policies, documents"
+      },
+      "id": "0f400fb4-d205-4371-8057-903cd9aaaec2",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "position": [
+        500,
+        -40
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "n8ntest2",
+          "mode": "list",
+          "cachedResultName": "n8ntest2"
+        },
+        "options": {}
+      },
+      "id": "7493c908-cf4f-42d5-8cdd-ce2e204c52c9",
+      "name": "Pinecone Vector Store (Retrieval)",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "position": [
+        400,
+        180
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "pineconeApi": {
+          "id": "0220wCVK0Yhpzwpj",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $workflow.id }}",
+        "contextWindowLength": 4
+      },
+      "id": "559f69ae-57fb-48d8-b2ac-42a6f09b49c5",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        380,
+        -40
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -40
+      ],
+      "id": "4e26cec6-dc01-4b20-8ecc-12285f813d64",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "0oKKfFRWHWORUVKl",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "embed-multilingual-v2.0"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsCohere",
+      "typeVersion": 1,
+      "position": [
+        500,
+        360
+      ],
+      "id": "5a88c3f1-4167-4be5-a1c1-47b089ba3df2",
+      "name": "Embeddings Cohere",
+      "credentials": {
+        "cohereApi": {
+          "id": "5LyRk6wLsXusMrWj",
+          "name": "CohereApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        700,
+        160
+      ],
+      "id": "f8265c97-b5b9-4d68-aa12-6811282c94df",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "0oKKfFRWHWORUVKl",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "policy",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        60,
+        -220
+      ],
+      "id": "08b8a020-383c-4c16-a534-9d95da4a75c6",
+      "name": "Webhook",
+      "webhookId": "c2a8e910-5c15-4102-9928-db3dbbf9e001"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        -260
+      ],
+      "id": "9f89e7c6-e36e-4dc5-ae0e-0ad7ffd12c0e",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store (Retrieval)": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Cohere": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store (Retrieval)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "31e82939-fcec-4808-959e-557399241250",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6dbaecb3068686ac58f28f995e3743cba51ef9f5028d546eef3cbd2484f5d6c3"
+  },
+  "id": "fcucle78iJIgjof2",
+  "tags": []
+}
