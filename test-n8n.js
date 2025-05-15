@@ -1,7 +1,7 @@
 // Simple Node.js script to test n8n webhook with different payload formats
 import fetch from 'node-fetch';
 
-const WEBHOOK_URL = 'https://mohikagnext.app.n8n.cloud/webhook/policy';
+const WEBHOOK_URL = 'https://mohik.app.n8n.cloud/webhook/policy';
 const TEST_MESSAGE = 'What are the IT policies in Chandigarh?';
 
 // Different payload formats to try

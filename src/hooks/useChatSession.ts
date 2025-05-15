@@ -77,7 +77,7 @@ Is there something specific about SEZ policies you'd like to know?`;
         console.log('Using mock response instead of webhook');
       } else {
         const res = await fetch(
-          "https://mohikagnext.app.n8n.cloud/webhook/policy",
+          "https://mohik.app.n8n.cloud/webhook/policy",
           {
             method: 'POST',
             headers: {
